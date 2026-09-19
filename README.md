@@ -1,5 +1,6 @@
 # Metal-Gear-Solid-Portable-Ops-Autosplitter
 Speedrunning autosplitter for running Metal Gear Solid: Portable Ops on PPSSPP emulator.
+Requires [emu-help-v3](https://github.com/Jujstme/emu-help-v3/raw/dc66ce576d8100c964bd37d170166e11135d91ca/lib/Livesplit/emu-help-v3) to be added to your LiveSplit/Components folder.  
 
 ## Features
 - Works on PAL, US and JP versions
@@ -15,3 +16,4 @@ Speedrunning autosplitter for running Metal Gear Solid: Portable Ops on PPSSPP e
 ## Intended Updates
 - Option to split when ending an area rather than starting a new one, or both so splits can cover between mission activities
 - Option to split for the start of Boss fights
+- Portable Ops + support
