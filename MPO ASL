@@ -2,8 +2,8 @@
 // For use with the PPSSPP Emulator
 // Created by NickRPGreen 
 
-// v1.0:
-// - Initial commit
+// v1.01:
+// - New Game + support (only for EU right now)
 
 state("LiveSplit") {}
 
@@ -22,6 +22,7 @@ init {
     var u = vars.U;
     u.ready = false;
     u.warning = false;
+    u.started = false;
 }
 
 update {
@@ -43,6 +44,7 @@ update {
         else if(u.PAL.Current == 69){
             u.region = "PAL";
             u.IGT = vars.Helper.Make<uint>(0x08A51AA0);
+            u.LastIGT = vars.Helper.Make<uint>(0x08A78DB0); // IGT of the last playthrough on the same save, is subtracted from IGT for NG+
             u.ScreenID = vars.Helper.Make<uint>(0x08A70384); // 0 on reset
             u.GameState = vars.Helper.Make<byte>(0x08A22D1C); // 20 = Mission, 30 = Stage Select, 60 = Cutscene;
             //u.Boss = vars.Helper.Make<uint>(0x08a24e60);
@@ -78,14 +80,39 @@ update {
         u.warning = false;
         u.Log("ROM unloaded, scanning for new version");
     }
+    current.ScreenID = u.ScreenID.Current;
+    current.AreaID = u.AreaID.Current;
+    current.GameState = u.GameState.Current;
+    current.Results = u.Results.Current;
+    current.IGT = u.IGT.Current;
+    current.LastIGT = u.LastIGT.Current;
+
+    if(!u.started && u.Results.Current > 30){
+        u.started = true;
+    }
 }
 
 gameTime {
-	return TimeSpan.FromMilliseconds(vars.U.IGT.Current*1000/300);
+    var u = vars.U;
+    if(u.started){
+        return TimeSpan.FromMilliseconds((u.IGT.Current - u.LastIGT.Current)*1000/300);
+    }
+    else return null;
 }
 
 start {
-    return vars.U.ScreenID.Old == 0 && vars.U.ScreenID.Current == 1935764582;
+    var u = vars.U;
+    return (u.ScreenID.Old == 1768189541 || u.ScreenID.Old == 0) && u.ScreenID.Current == 1935764582;
+}
+
+onStart {
+    var u = vars.U;
+    if(u.LastIGT.Current == 0){
+        u.started = true;
+    }
+    else{
+        u.started = false;
+    }
 }
 
 isLoading {
