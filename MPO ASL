@@ -2,12 +2,12 @@
 // For use with the PPSSPP Emulator
 // Created by NickRPGreen 
 
-// v1.01:
+// v1.02:
 // - New Game + support (only for EU right now)
 
 state("LiveSplit") {}
 
-startup{
+startup {
     vars.U = new ExpandoObject();
     var u = vars.U;
     u.Log = (Action<string>)(x => print("MPO ASL - " + x.ToString()));
@@ -23,6 +23,7 @@ init {
     u.ready = false;
     u.warning = false;
     u.started = false;
+    u.tempIGT = 0;
 }
 
 update {
@@ -97,7 +98,9 @@ gameTime {
     if(u.started){
         return TimeSpan.FromMilliseconds((u.IGT.Current - u.LastIGT.Current)*1000/300);
     }
-    else return null;
+    else {
+        return TimeSpan.FromMilliseconds((u.IGT.Current - u.tempIGT)*1000/300);
+    }
 }
 
 start {
@@ -112,6 +115,7 @@ onStart {
     }
     else{
         u.started = false;
+        u.tempIGT = u.IGT.Current;
     }
 }
 
