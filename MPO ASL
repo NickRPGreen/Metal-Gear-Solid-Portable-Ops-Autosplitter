@@ -2,12 +2,12 @@
 // For use with the PPSSPP Emulator
 // Created by NickRPGreen 
 
-// v1.02:
-// - New Game + support (only for EU right now)
+// v1.03:
+// - New Game + support
 
 state("LiveSplit") {}
 
-startup {
+startup{
     vars.U = new ExpandoObject();
     var u = vars.U;
     u.Log = (Action<string>)(x => print("MPO ASL - " + x.ToString()));
@@ -35,6 +35,7 @@ update {
         if(u.USA.Current == 85){
             u.region = "USA";
             u.IGT = vars.Helper.Make<uint>(0x08a5cb90);
+            u.LastIGT = vars.Helper.Make<uint>(0x08a24e20); // IGT of the last playthrough on the same save, is subtracted from IGT for NG+
             u.ScreenID = vars.Helper.Make<uint>(0x08a1c2f8); // 0 on reset
             u.GameState = vars.Helper.Make<byte>(0x08a18e6c); // 20 = Mission, 30 = Stage Select, 60 = Cutscene;
             //u.Boss = vars.Helper.Make<uint>(0x08a24e60);
@@ -56,6 +57,7 @@ update {
         else if(u.JAP.Current == 74){
             u.region = "JAP";
             u.IGT = vars.Helper.Make<uint>(0x08A1C3C8);
+            u.LastIGT = vars.Helper.Make<uint>(0x08A24EE0); // IGT of the last playthrough on the same save, is subtracted from IGT for NG+
             u.ScreenID = vars.Helper.Make<uint>(0x08A1C3B8); // 0 on reset
             u.GameState = vars.Helper.Make<byte>(0x08A22D1C); // 20 = Mission, 30 = Stage Select, 60 = Cutscene;
             //u.Boss = vars.Helper.Make<uint>(0x08a24e60);//
